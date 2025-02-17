@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = "stylesheet" href="/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            //alert("jQuery Works!");
+            $("#viewAddEditPane").hide();
+            refreshTodoList();
+        });
+
+        function refreshTodoList() {
+            $.ajax({ // future: headers for authentication, url parameters for sorting, etc.
+                url: "/api/todos",
+                type: "GET",
+                dataType: "json",
+                error: function(jqxhr,status, errorThrown){
+                    alert("AJAX error:" + jqxhr.responseText);
+                                
+                }
+            }).done(function( todoList){
+                var result = '<tr><th>#</th><th>Task</th><th>Due date</th><th>Done?</th></tr>';
+                for (var i = 0; i< todoList.length; i++) {
+                    var todo = todoList[i];
+                    result += '<tr onclick = "selectItem(' + todo.id +')">';
+                    result += '<td>' + todo.id + '</td>';
+                    result += '<td>' + todo.task + '</td>';
+                    result += '<td>' + todo.dueDate + '</td>';
+                    result += '<td>' + todo.isDone + '</td>';
+                    result += '</tr>' + "\n";
+                    
+                }
+                $("#listTable").html(result);
+                    
+            })
+        }
+
+    </script>
+</head>
+<body>
+    <div id="centerContent">
+        <div id="listPane">
+            <button id="showAddItem">Add item</button>
+            <table id="listTable" border="1"></table>
+
+        </div>
+        <div id="viewAddEditPane">
+            Current ID:<span id="currentId"></span><br>
+            Task: <input type="text" name="task"><br>
+            Due date: <input type="date" name="dueDate"><br>
+            Is done: <input type="checkbox" name="isDone"><br>
+            <button id="saveOrAdd">Save or Add</button>
+            <button id="delete">Delete</button>
+            <button id="cancel">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>
