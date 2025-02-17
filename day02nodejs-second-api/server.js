@@ -22,10 +22,13 @@ app.get("/", (req, res) => {
 
 require("./app/routes/todos.routes.js")(app);
 
+app.use(express.static('static'));
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8180;
 
 require("./app/routes/todos.routes.js")(app);
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
